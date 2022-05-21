@@ -5,6 +5,8 @@ import {
   getOtp,
   registerUser,
   isRegistered,
+  updateUser,
+  getUser
 } from "./userService";
 import SignInLogin from "./SigninLogin";
 import DispScreen from "./DispScreen";
@@ -22,7 +24,21 @@ class App extends React.Component {
         email: "",
       },
       messages: [],
+      dd:""
     };
+  }
+  getuser=()=>{
+    getUser().then((ans)=>{
+      this.setState({
+        dd:ans
+      })
+    });
+  }
+  setUser=()=>{
+    let date=new Date()
+    updateUser({'user':this.state.user.name,'created':date.getTime()}).then((u)=>{
+      getUser();
+    })
   }
   updateMessage = () => {
     getAllMessages().then((doc) => {
@@ -30,6 +46,9 @@ class App extends React.Component {
       this.setState({ messages: doc });
     });
   };
+  componentDidCatch=()=>{
+    getUser();
+  }
   handleSubmit = (event) => {
     event.preventDefault();
     this.updateMessage();
@@ -79,7 +98,7 @@ class App extends React.Component {
     }
   };
   render() {
-    const { displayotp, error, myerror, isSignedIn } = this.state;
+    const { displayotp, error, myerror, isSignedIn,dd } = this.state;
     if (!isSignedIn) {
       return (
         <SignInLogin
@@ -91,16 +110,22 @@ class App extends React.Component {
         />
       );
     } else {
-      // return <div>naman is good boy</div>;
+      // <div>naman is good boy</div>;
       return (
-        <DispScreen
+        <div>
+          {dd.user} is typing
+          <DispScreen
           displayotp={displayotp}
           error={error}
           myerror={myerror}
           messages={this.state.messages}
           user={this.state.user}
           updateMessage={this.updateMessage}
+          getuser={this.getuser}
+          dd={dd}
+          setUser={this.setUser}
         />
+        </div>
       );
     }
   }

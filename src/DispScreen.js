@@ -1,7 +1,9 @@
 import { getAllMessages, sendMessage } from "./userService";
 import Message from "./Message";
+import {useState} from 'react';
 const DispScreen = (props) => {
-  let { messages, user, updateMessage } = props;
+  // let [curruser,upcurruser]=useState("");
+  let { messages, user, updateMessage, dd, getuser ,setUser} = props;
   let ele = document.getElementById("me");
   // ele.scrollTop = ele.scrollHeight;
   setInterval(() => {
@@ -14,10 +16,16 @@ const DispScreen = (props) => {
       }
     });
   }, 12000);
-  function ss(id){
+  function ss(id) {
     ele = document.getElementById(id);
     ele.scrollTop = ele.scrollHeight;
-  };
+  }
+  const handelUpdate=(event)=>{
+    event.preventDefault();
+    // console.log(event.target.value);
+    setUser();
+    getuser();
+  }
   const handleMessage = (event) => {
     event.preventDefault();
     sendMessage({
@@ -29,26 +37,75 @@ const DispScreen = (props) => {
       updateMessage();
       // ss("me");
       event.target[0].value = "";
-      ele = document.getElementById('me');
+      ele = document.getElementById("me");
       ele.scrollTop = ele.scrollHeight;
     });
-    ele = document.getElementById('me');
+    ele = document.getElementById("me");
     ele.scrollTop = ele.scrollHeight;
   };
+  setInterval(()=>{
+    getuser()
+  },18000)
+  // const updateuser = (event) => {
+  //   event.preventDefault();
+  //   // console.log(event.target.value)
+  //   updateUser({'user':user.name}).then((ans)=>{
+  //     // curruser=ans
+  //   //  upcurruser(ans)
+  //     console.log(ans);
+  //   })
+  // };
+  
+  // setInterval(()=>{
+  //   getUser().then((ans)=>{
+  //     // console.log(ans);
+  //     upcurruser(ans)
+  //     // curruser=ans;
+  //   })
+  // },12000)
+  console.log(dd);
   return (
     <div style={styles.disp}>
       <div id="me" style={styles.scr}>
+        {/* <h6>{dd}</h6> */}
         <h3>
           {messages.map((item) => {
             return <Message item={item} key={item.id} email={user.email} />;
           })}
         </h3>
-      </div>  
+      </div>
       {/* {ss()} */}
       <form onSubmit={handleMessage}>
-        <input style={{width:'99%',height:'40px' ,border:'2px solid #006d77',marginTop:'3px',borderRadius:'10px',marginBottom:'3px'}} type="text" required placeholder="Type here" name="message" />
-        <input style={{width:'20%',height:'30px',border:'3px solid #22223b',borderRadius:'5px',marginLeft:'40%'}} type="submit" value="Send" />
+        <input
+          onChange={handelUpdate}
+          style={{
+            width: "99%",
+            height: "40px",
+            border: "2px solid #006d77",
+            marginTop: "3px",
+            borderRadius: "10px",
+            marginBottom: "3px",
+          }}
+          type="text"
+          required
+          placeholder="Type here"
+          name="message"
+        />
+        <input
+          style={{
+            width: "20%",
+            height: "30px",
+            border: "3px solid #22223b",
+            borderRadius: "5px",
+            marginLeft: "40%",
+          }}
+          type="submit"
+          value="Send"
+        />
       </form>
+      {
+        new Date().getTime()-5000<dd.created && dd.user
+      }
     </div>
   );
 };
@@ -59,8 +116,8 @@ const styles = {
     width: "50%",
     marginLeft: "25%",
     padding: "10px",
-    alignText:'center',
-    borderRadius:'3px'
+    alignText: "center",
+    borderRadius: "3px",
   },
   scr: {
     // border: "2px solid red",

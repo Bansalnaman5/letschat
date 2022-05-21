@@ -34,11 +34,30 @@ export async function registerUser(data) {
 export async function isRegistered(data) {
   try {
     const res = await axios.post("http://localhost:8000/api/checkuser", data);
-    if(res.data.message=='clean'){
+    if (res.data.message == "clean") {
       return true;
-    }
-    else return false;
+    } else return false;
   } catch (err) {
     return false;
+  }
+}
+
+export async function getUser() {
+  try {
+    let res = await axios.get("http://localhost:8000/api/getUser");
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return {};
+  }
+}
+
+export async function updateUser(data) {
+  try {
+    let res = await axios.post("http://localhost:8000/api/updateUser", data);
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return {};
   }
 }
